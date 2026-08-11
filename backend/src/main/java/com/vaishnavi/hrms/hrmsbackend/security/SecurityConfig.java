@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import org.springframework.http.HttpMethod;
 import java.util.List;
 
 @Configuration
@@ -68,6 +68,12 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/employees").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers(HttpMethod.PUT, "/api/employees/**").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/employees/**").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers(HttpMethod.POST, "/api/leave/*/decide").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers("/api/payroll/export").hasAnyRole("ADMIN", "HR")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

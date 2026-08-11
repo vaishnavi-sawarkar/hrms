@@ -17,8 +17,12 @@ export default function Login() {
         setLoading(true);
 
         try {
-            await login(username, password);
-            navigate('/dashboard');
+            const result = await login(username, password);
+            if (result.role === 'ADMIN' || result.role === 'HR') {
+                navigate('/dashboard');
+            } else {
+                navigate('/my-space');
+            }
         } catch (err) {
             setError(err.response?.data || 'Login failed. Please check your credentials.');
         } finally {

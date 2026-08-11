@@ -3,54 +3,72 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
+import MySpace from './pages/MySpace';
+import MyLeave from './pages/MyLeave';
 
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+    const { user, loading } = useAuth();
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
 
-  return children;
+    return children;
 }
 
 function AppRoutes() {
-  return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-        />
-        <Route
-            path="/employees"
-            element={
-              <ProtectedRoute>
-                <Employees />
-              </ProtectedRoute>
-            }
-        />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-  );
+    return (
+        <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+                path="/dashboard"
+                element={
+                    <ProtectedRoute>
+                        <Dashboard />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/employees"
+                element={
+                    <ProtectedRoute>
+                        <Employees />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/my-space"
+                element={
+                    <ProtectedRoute>
+                        <MySpace />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/my-leave"
+                element={
+                    <ProtectedRoute>
+                        <MyLeave />
+                    </ProtectedRoute>
+                }
+            />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+    );
 }
 
 function App() {
-  return (
-      <BrowserRouter>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <AuthProvider>
+                <AppRoutes />
+            </AuthProvider>
+        </BrowserRouter>
+    );
 }
 
 export default App;

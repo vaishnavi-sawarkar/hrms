@@ -5,9 +5,11 @@ import com.vaishnavi.hrms.hrmsbackend.dto.EmployeeResponse;
 import com.vaishnavi.hrms.hrmsbackend.model.Department;
 import com.vaishnavi.hrms.hrmsbackend.model.Designation;
 import com.vaishnavi.hrms.hrmsbackend.model.Employee;
+import com.vaishnavi.hrms.hrmsbackend.model.User;
 import com.vaishnavi.hrms.hrmsbackend.repository.DepartmentRepository;
 import com.vaishnavi.hrms.hrmsbackend.repository.DesignationRepository;
 import com.vaishnavi.hrms.hrmsbackend.repository.EmployeeRepository;
+import com.vaishnavi.hrms.hrmsbackend.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,16 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final DesignationRepository designationRepository;
+    private final UserRepository userRepository;
 
     public EmployeeService(EmployeeRepository employeeRepository,
                            DepartmentRepository departmentRepository,
-                           DesignationRepository designationRepository) {
+                           DesignationRepository designationRepository,
+                           UserRepository userRepository) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.designationRepository = designationRepository;
+        this.userRepository = userRepository;
     }
 
     public EmployeeResponse createEmployee(EmployeeRequest request) {
@@ -37,6 +42,17 @@ public class EmployeeService {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found: " + id));
         return mapToResponse(employee);
+    }
+
+    public EmployeeResponse getEmployeeByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+        if (user.getEmployee() == null) {
+            throw new RuntimeException("This user account is not linked to an employee record");
+        }
+
+        return mapToResponse(user.getEmployee());
     }
 
     public Page<EmployeeResponse> getAllEmployees(Pageable pageable) {

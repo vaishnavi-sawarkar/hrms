@@ -6,6 +6,7 @@ import com.vaishnavi.hrms.hrmsbackend.service.EmployeeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,12 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeResponse> createEmployee(@RequestBody EmployeeRequest request) {
         return ResponseEntity.ok(employeeService.createEmployee(request));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<EmployeeResponse> getMyProfile(Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(employeeService.getEmployeeByUsername(username));
     }
 
     @GetMapping("/{id}")

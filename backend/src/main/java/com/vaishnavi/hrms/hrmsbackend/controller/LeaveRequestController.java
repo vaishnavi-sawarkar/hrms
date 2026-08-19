@@ -35,6 +35,26 @@ public class LeaveRequestController {
         }
     }
 
+    // ADMIN/HR only — grants leave that bypasses the department capacity block,
+    // limited to 2 uses per employee per month (enforced in the service layer).
+    @PostMapping("/emergency-override")
+    public ResponseEntity<?> applyEmergencyOverride(
+            @RequestParam Long employeeId,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate,
+            @RequestParam(required = false) String reason,
+            @RequestParam String overrideReason,
+            @RequestParam Long grantedByApproverId
+    ) {
+        try {
+            LeaveRequest leaveRequest = leaveRequestService.applyEmergencyOverride(
+                    employeeId, startDate, endDate, reason, overrideReason, grantedByApproverId);
+            return ResponseEntity.ok(leaveRequest);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/{id}/decide")
     public ResponseEntity<?> decideLeave(
             @PathVariable Long id,

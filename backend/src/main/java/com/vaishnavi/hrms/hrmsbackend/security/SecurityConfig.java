@@ -1,4 +1,3 @@
-
 package com.vaishnavi.hrms.hrmsbackend.security;
 
 import org.springframework.context.annotation.Bean;
@@ -78,6 +77,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/employees/**").hasAnyRole("ADMIN", "HR")
                         .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN", "HR")
                         .requestMatchers(HttpMethod.POST, "/api/leave/*/decide").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers(HttpMethod.POST, "/api/leave/emergency-override").hasAnyRole("ADMIN", "HR")
                         .requestMatchers("/api/payroll/export").hasAnyRole("ADMIN", "HR")
                         .anyRequest().authenticated()
                 )

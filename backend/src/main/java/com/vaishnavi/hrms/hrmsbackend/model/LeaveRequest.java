@@ -40,6 +40,12 @@ public class LeaveRequest {
     private LocalDateTime appliedAt;
     private LocalDateTime decidedAt;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean emergencyOverride = false;
+
+    private String overrideReason; // mandatory when emergencyOverride is true, explains why capacity was bypassed
+
     @Version
-    private Long version; // for optimistic locking - explained below
+    private Long version; // for optimistic locking
 }
